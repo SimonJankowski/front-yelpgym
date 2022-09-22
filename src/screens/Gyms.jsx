@@ -13,9 +13,16 @@ const Gyms = () => {
   return (
     <>
       <h1> All Gyms</h1>
+      <div>
+        <a href="/new">add gym</a>
+      </div>
       <ul>
         {gyms?.length ? (
-          gyms.map((gym, idx) => <li>{gym.title}</li>)
+          gyms.map((gym, idx) => (
+            <li>
+              <a href={`/gym/${gym._id}`}>{gym.title}</a>
+            </li>
+          ))
         ) : (
           <h1>no data</h1>
         )}
