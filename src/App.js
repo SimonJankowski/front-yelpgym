@@ -5,16 +5,19 @@ import Gyms from "./screens/Gyms";
 import Show from "./screens/Show";
 import New from "./screens/New";
 import Edit from "./screens/Edit";
+import Boilerplate from "./partials/Boilerplate";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/gyms" element={<Gyms />} />
-        <Route path="/gym/:gymid" element={<Show />} />
-        <Route path="/gym/:gymid/edit" element={<Edit />} />
-        <Route path="/new" element={<New />} />
+        <Route index path="/" element={<LandingPage />} />
+        <Route element={<Boilerplate />}>
+          <Route path="/gyms" element={<Gyms />} />
+          <Route path="/gym/:gymid" element={<Show />} />
+          <Route path="/gym/:gymid/edit" element={<Edit />} />
+          <Route path="/new" element={<New />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

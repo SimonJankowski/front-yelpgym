@@ -26,19 +26,37 @@ const Show = () => {
     <>
       {gym != undefined ? (
         <>
-          <h1>{gym.title}</h1>
-          <h2>{gym.location}</h2>
+          <div className="row">
+            <div className="col-6 offset-3">
+              <div class="card mb-3">
+                <img src={gym.image} class="card-img-top" alt="..." />
+                <div class="card-body">
+                  <h5 class="card-title">{gym.title}</h5>
+                  <p class="card-text">{gym.description}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item text-muted">{gym.location}</li>
+                  <li class="list-group-item">${gym.price} / month </li>
+                </ul>
+                <div class="card-body">
+                  <a
+                    className="card-link btn btn-info"
+                    href={`/gym/${gymid}/edit`}
+                  >
+                    edit
+                  </a>
+                  <button className="btn btn-danger" onClick={onDeleteClick}>
+                    Delete
+                  </button>
+                </div>
+                <div className="card-footer text-muted">2 days ago</div>
+              </div>
+            </div>
+          </div>
         </>
       ) : (
         <h1>no gym</h1>
       )}
-      <footer>
-        <a href={`/gym/${gymid}/edit`}>edit</a>{" "}
-        <button onClick={onDeleteClick}>Delete</button>
-        <br />
-        <a href="/gyms">All gyms</a>
-        <br />
-      </footer>
     </>
   );
 };

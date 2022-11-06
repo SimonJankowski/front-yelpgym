@@ -19,9 +19,25 @@ const Gyms = () => {
       <ul>
         {gyms?.length ? (
           gyms.map((gym, idx) => (
-            <li>
-              <a href={`/gym/${gym._id}`}>{gym.title}</a>
-            </li>
+            <div className="card mb-3">
+              <div className="row">
+                <div className="col-md-4">
+                  <img src={gym.image} alt="" className="img-fluid" />
+                </div>
+                <div className="col-md-8">
+                  <div className="card-body">
+                    <h5 className="card-title">{gym.title}</h5>
+                    <p className="card-text">{gym.description}</p>
+                    <p className="card-text">
+                      <small className="text-muted">{gym.location}</small>
+                    </p>
+                    <a href={`/gym/${gym._id}`} className="btn btn-primary">
+                      VIEW
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
           ))
         ) : (
           <h1>no data</h1>

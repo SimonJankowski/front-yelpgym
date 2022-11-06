@@ -19,6 +19,9 @@ const Edit = () => {
     const gym = {
       title: e.target[0].value,
       location: e.target[1].value,
+      image: e.target[2].value,
+      price: e.target[3].value,
+      description: e.target[4].value,
     };
     console.log(gym);
     await axios
@@ -34,29 +37,84 @@ const Edit = () => {
   };
   return (
     <>
-      <h1>Edit Gym</h1>
-      <form onSubmit={onFormSubmit}>
-        <div>
-          <label htmlFor="title">Title</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            defaultValue={gym?.title || ""}
-          />
+      <div className="row">
+        <h1 className="text-center">Edit gym</h1>
+        <div className="col-6 offset-3">
+          <form onSubmit={onFormSubmit}>
+            <div className="mb-3">
+              <label className="form-label" htmlFor="title">
+                Title
+              </label>
+              <input
+                className="form-control"
+                type="text"
+                id="title"
+                name="title"
+                defaultValue={gym?.title || ""}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label" htmlFor="location">
+                Location
+              </label>
+              <input
+                className="form-control"
+                type="text"
+                id="location"
+                name="location"
+                defaultValue={gym?.location || ""}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label" htmlFor="image">
+                Image
+              </label>
+              <input
+                className="form-control"
+                type="text"
+                id="image"
+                name="image"
+                defaultValue={gym?.image || ""}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label" htmlFor="price">
+                Price
+              </label>
+
+              <div className="input-group">
+                <span className="input-group-text" id="basic-addon1">
+                  $
+                </span>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="price"
+                  placeholder="0"
+                  name="price"
+                  defaultValue={gym?.price || ""}
+                />
+              </div>
+            </div>
+            <div className="mb-3">
+              <label className="form-label" htmlFor="description">
+                description
+              </label>
+              <textarea
+                className="form-control"
+                type="text"
+                id="description"
+                name="description"
+                defaultValue={gym?.description || ""}
+              />
+            </div>
+            <div className="mb-3">
+              <button className="btn btn-info">Update Gym</button>
+            </div>
+          </form>
+          <a href={`/gym/${gymid}`}>back to Gym</a>
         </div>
-        <div>
-          <label htmlFor="location">Location</label>
-          <input
-            type="text"
-            id="location"
-            name="location"
-            defaultValue={gym?.location || ""}
-          />
-        </div>
-        <button>Update Gym</button>
-      </form>
-      <a href="/gyms">all gyms</a>
+      </div>
     </>
   );
 };
