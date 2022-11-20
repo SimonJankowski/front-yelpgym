@@ -18,8 +18,7 @@ const Edit = () => {
   }, []);
 
   const onFormSubmit = async (values) => {
-    const gym = { ...values.gym };
-    console.log(gym);
+    const gym = { gym: { ...values.gym } };
     await axios
       .post(`http://localhost:3001/gyms/${gymid}/update`, gym)
       .then((res) => {
@@ -28,7 +27,9 @@ const Edit = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        const mainError = JSON.parse(JSON.stringify(error));
+        const response = JSON.parse(JSON.stringify(error.response));
+        navigate("/error", { state: { ...mainError, ...response } });
       });
   };
 
@@ -39,7 +40,7 @@ const Edit = () => {
         <div className="col-6 offset-3">
           <Form
             onSubmit={onFormSubmit}
-            initialValues={{ gym: { ...gymR } }}
+            initialValues={{ gym: { ...gymR, _id: undefined, reviews: undefined, __v: undefined } }}
             render={({ handleSubmit, invalid, pristine }) => (
               <form onSubmit={handleSubmit}>
                 <Field name="gym[title]" validate={Validators.required}>
