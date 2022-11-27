@@ -1,42 +1,80 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Form, Field } from "react-final-form";
+import { ToastContainer } from "react-toastify";
 import axios from "axios";
 import * as Validators from "../helpers/validators";
+import { bikini } from "../helpers/bikini";
 
 const Show = () => {
   const [gym, setGym] = useState(undefined);
   const { gymid } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     getGym();
+    if (location?.state?.bikini) {
+      const { type, message } = location.state.bikini;
+      bikini(type, message);
+    }
   }, []);
 
   function getGym() {
     axios.get(`http://localhost:3001/gyms/${gymid}`).then((res) => {
       setGym(res.data.gym);
-      console.log(res.data.gym);
     });
   }
 
   const onDeleteClick = () => {
-    axios.get(`http://localhost:3001/gyms/${gymid}/delete`).then((res) => {
-      if (res.status == 200) {
-        navigate("/gyms");
-      }
-    });
+    axios
+      .get(`http://localhost:3001/gyms/${gymid}/delete`)
+      .then((res) => {
+        if (res.status == 200) {
+          navigate("/gyms", {
+            state: {
+              bikini: {
+                type: "success",
+                message: "succesfully deleted the gym"
+              }
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        const mainError = JSON.parse(JSON.stringify(error));
+        const response = JSON.parse(JSON.stringify(error.response));
+        navigate("/error", { state: { ...mainError, ...response } });
+      });
   };
 
   const onReviewSubmit = async (values) => {
     const payload = { review: { ...values.review } };
-    await axios.post(`http://localhost:3001/gyms/${gymid}/reviews`, payload);
+    await axios
+      .post(`http://localhost:3001/gyms/${gymid}/reviews`, payload)
+      .then((res) => {
+        if (res.status == 200) {
+          bikini("success", res.data ?? "review added successfully");
+        }
+      })
+      .catch((error) => {
+        bikini("error", error.response.data ?? "something went wrong");
+      });
     getGym();
   };
 
   const onReviewDelete = async (id) => {
-    await axios.get(`http://localhost:3001/gyms/${gymid}/reviews/${id}`);
+    await axios
+      .get(`http://localhost:3001/gyms/${gymid}/reviews/${id}`)
+      .then((res) => {
+        if (res.status == 200) {
+          bikini("success", res.data ?? "review deleted");
+        }
+      })
+      .catch((error) => {
+        bikini("error", error.response.data ?? "something went wrong");
+      });
     getGym();
   };
 
@@ -96,6 +134,18 @@ const Show = () => {
 
   return (
     <>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       {gym != undefined ? (
         <>
           <div className="row">

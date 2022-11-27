@@ -1,17 +1,38 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import { bikini } from "../helpers/bikini";
 
 const Gyms = () => {
   const [gyms, setGyms] = useState([]);
+  const location = useLocation();
 
   useEffect(() => {
-    axios.get("http://localhost:3001/gyms").then((res) => {
+    axios.get("/gyms").then((res) => {
       setGyms(res.data.gyms);
     });
+    if (location?.state?.bikini) {
+      console.log(location?.state?.bikini);
+      const { type, message } = location.state.bikini;
+      bikini(type, message);
+    }
   }, []);
 
   return (
     <>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <h1> All Gyms</h1>
       <div>
         <a href="/new">add gym</a>
@@ -19,7 +40,7 @@ const Gyms = () => {
       <ul>
         {gyms?.length ? (
           gyms.map((gym, idx) => (
-            <div className="card mb-3">
+            <div className="card mb-3" key={idx}>
               <div className="row">
                 <div className="col-md-4">
                   <img src={gym.image} alt="" className="img-fluid" />
