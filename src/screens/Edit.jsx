@@ -12,7 +12,7 @@ const Edit = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/gyms/${gymid}`).then((res) => {
+    axios.get(`/gyms/${gymid}`).then((res) => {
       setGym(res.data.gym);
     });
   }, []);
@@ -20,10 +20,17 @@ const Edit = () => {
   const onFormSubmit = async (values) => {
     const gym = { gym: { ...values.gym } };
     await axios
-      .post(`http://localhost:3001/gyms/${gymid}/update`, gym)
+      .post(`/gyms/${gymid}/update`, gym)
       .then((res) => {
         if (res.status == 200) {
-          navigate(`/gym/${gymid}`);
+          navigate(`/gym/${gymid}`, {
+            state: {
+              bikini: {
+                type: "success",
+                message: "succesfully updated the gym"
+              }
+            }
+          });
         }
       })
       .catch((error) => {

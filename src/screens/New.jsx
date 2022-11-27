@@ -10,10 +10,17 @@ const New = () => {
   const onFormSubmit = async (values) => {
     const payload = { gym: { ...values.gym } };
     await axios
-      .post("http://localhost:3001/gyms/new", payload)
+      .post("/gyms/new", payload)
       .then((res) => {
         if (res.status == 200) {
-          navigate(`/gym/${res.data}`);
+          navigate(`/gym/${res.data}`, {
+            state: {
+              bikini: {
+                type: "success",
+                message: "succesfully added the gym"
+              }
+            }
+          });
         }
       })
       .catch((error) => {
@@ -82,11 +89,7 @@ const New = () => {
             </Field>
             <Field
               name="gym[price]"
-              validate={Validators.composeValidators(
-                Validators.required,
-                Validators.mustBeNumber,
-                Validators.minValue(0)
-              )}
+              validate={Validators.composeValidators(Validators.required, Validators.mustBeNumber, Validators.minValue(0))}
             >
               {({ input, meta }) => (
                 <div className="mb-3">
