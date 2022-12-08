@@ -119,7 +119,7 @@ const Show = () => {
   const ReviewList = () => {
     return gym.reviews.map((review) => {
       return (
-        <div className="mb-3 card">
+        <div className="mb-3 card" key={review._id}>
           <div className="card-body">
             <h5 className="card-title">Rating: {review.rating}</h5>
             <p className="card-text">Review: {review.body}</p>
@@ -150,17 +150,17 @@ const Show = () => {
         <>
           <div className="row">
             <div className="col-6">
-              <div class="card mb-3">
-                <img src={gym.image} class="card-img-top" alt="..." />
-                <div class="card-body">
-                  <h5 class="card-title">{gym.title}</h5>
-                  <p class="card-text">{gym.description}</p>
+              <div className="card mb-3">
+                <img src={gym.image} className="card-img-top" alt="..." />
+                <div className="card-body">
+                  <h5 className="card-title">{gym.title}</h5>
+                  <p className="card-text">{gym.description}</p>
                 </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item text-muted">{gym.location}</li>
-                  <li class="list-group-item">${gym.price} / month </li>
+                <ul className="list-group list-group-flush">
+                  <li className="list-group-item text-muted">{gym.location}</li>
+                  <li className="list-group-item">${gym.price} / month </li>
                 </ul>
-                <div class="card-body">
+                <div className="card-body">
                   <a className="card-link btn btn-info" href={`/gym/${gymid}/edit`}>
                     edit
                   </a>

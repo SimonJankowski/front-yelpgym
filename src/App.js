@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, Switch, Navigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,22 +9,51 @@ import New from "./screens/New";
 import Edit from "./screens/Edit";
 import ErrorScreen from "./screens/ErrorScreen";
 import Boilerplate from "./partials/Boilerplate";
+import Register from "./screens/Register";
+import Login from "./screens/Login";
+import PRoute from "./partials/ProtectedRoute";
 import axios from "axios";
 
 axios.defaults.baseURL = "http://localhost:3001";
 axios.defaults.withCredentials = true;
 
 function App() {
+  const [currentUser, setCurrentUser] = useState();
+  const [checkInProgress, setCheckInProgress] = useState(true);
+  useEffect(() => {
+    setCheckInProgress(true);
+    axios.get("/get-user").then((res) => {
+      setCurrentUser(res.data);
+      setCheckInProgress(false);
+    });
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
         <Route index path="/" element={<LandingPage />} />
-        <Route element={<Boilerplate />}>
+        <Route element={<Boilerplate user={currentUser} setUser={setCurrentUser} />}>
           <Route path="/gyms" element={<Gyms />} />
           <Route path="/gym/:gymid" element={<Show />} />
-          <Route path="/gym/:gymid/edit" element={<Edit />} />
-          <Route path="/new" element={<New />} />
+          <Route
+            path="/gym/:gymid/edit"
+            element={
+              <PRoute user={currentUser} checkInProgress={checkInProgress}>
+                <Edit />
+              </PRoute>
+            }
+          />
+          <Route
+            path="/new"
+            element={
+              <PRoute user={currentUser} checkInProgress={checkInProgress}>
+                <New />
+              </PRoute>
+            }
+          />
           <Route path="/error" element={<ErrorScreen />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="*" element={<ErrorScreen title="Page not found" />} />
           {/* <Route path="*" element={<Navigate to="/error" replace />} /> */}
           <Route element={<ErrorScreen />} />

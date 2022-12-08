@@ -1,12 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Field } from "react-final-form";
+import { ToastContainer } from "react-toastify";
+import { useLocation } from "react-router-dom";
+import { bikini } from "../helpers/bikini";
 import axios from "axios";
 import * as Validators from "../helpers/validators";
 import ValidationDiv from "../Components/ValidationDiv";
 
 const New = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  useEffect(() => {
+    if (location?.state?.bikini) {
+      const { type, message } = location.state.bikini;
+      bikini(type, message);
+    }
+  }, []);
+
   const onFormSubmit = async (values) => {
     const payload = { gym: { ...values.gym } };
     await axios
@@ -14,6 +25,7 @@ const New = () => {
       .then((res) => {
         if (res.status == 200) {
           navigate(`/gym/${res.data}`, {
+            replace: true,
             state: {
               bikini: {
                 type: "success",
@@ -143,6 +155,17 @@ const New = () => {
 
   return (
     <>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="row">
         <h1 className="text-center">Add gym</h1>
         <div className="col-6 offset-3">

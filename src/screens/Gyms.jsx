@@ -13,7 +13,6 @@ const Gyms = () => {
       setGyms(res.data.gyms);
     });
     if (location?.state?.bikini) {
-      console.log(location?.state?.bikini);
       const { type, message } = location.state.bikini;
       bikini(type, message);
     }
@@ -31,7 +30,6 @@ const Gyms = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
       />
       <h1> All Gyms</h1>
       <div>

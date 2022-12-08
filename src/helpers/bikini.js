@@ -11,7 +11,7 @@ export const bikini = (type, message) => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light"
+        theme: "colored"
       });
       break;
     case "error":
@@ -23,7 +23,7 @@ export const bikini = (type, message) => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light"
+        theme: "colored"
       });
       break;
     default:
