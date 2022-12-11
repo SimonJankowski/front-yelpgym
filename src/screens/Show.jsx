@@ -7,7 +7,7 @@ import axios from "axios";
 import * as Validators from "../helpers/validators";
 import { bikini } from "../helpers/bikini";
 
-const Show = () => {
+const Show = ({ user }) => {
   const [gym, setGym] = useState(undefined);
   const { gymid } = useParams();
   const navigate = useNavigate();
@@ -122,10 +122,13 @@ const Show = () => {
         <div className="mb-3 card" key={review._id}>
           <div className="card-body">
             <h5 className="card-title">Rating: {review.rating}</h5>
+            {review.author?.username ? <h6 className="card-subtitle mb-2 text-muted">by {review.author?.username} </h6> : null}
             <p className="card-text">Review: {review.body}</p>
-            <button onClick={() => onReviewDelete(review._id)} className="btn btn-sm btn-danger">
-              Delete
-            </button>
+            {review.author?._id == user._id && user._id != undefined ? (
+              <button onClick={() => onReviewDelete(review._id)} className="btn btn-sm btn-danger">
+                Delete
+              </button>
+            ) : null}
           </div>
         </div>
       );
@@ -158,21 +161,24 @@ const Show = () => {
                 </div>
                 <ul className="list-group list-group-flush">
                   <li className="list-group-item text-muted">{gym.location}</li>
+                  <li className="list-group-item">Submited by {gym.author.username}</li>
                   <li className="list-group-item">${gym.price} / month </li>
                 </ul>
-                <div className="card-body">
-                  <a className="card-link btn btn-info" href={`/gym/${gymid}/edit`}>
-                    edit
-                  </a>
-                  <button className="ms-1 btn btn-danger" onClick={onDeleteClick}>
-                    Delete
-                  </button>
-                </div>
+                {user && gym.author?._id === user._id ? (
+                  <div className="card-body">
+                    <a className="card-link btn btn-info" href={`/gym/${gymid}/edit`}>
+                      edit
+                    </a>
+                    <button className="ms-1 btn btn-danger" onClick={onDeleteClick}>
+                      Delete
+                    </button>
+                  </div>
+                ) : null}
                 <div className="card-footer text-muted">2 days ago</div>
               </div>
             </div>
             <div className="col-6">
-              <ReviewForm />
+              {user ? <ReviewForm /> : null}
               {gym?.reviews?.length ? <ReviewList /> : null}
             </div>
           </div>

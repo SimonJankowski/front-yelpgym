@@ -6,21 +6,36 @@ import axios from "axios";
 import * as Validators from "../helpers/validators";
 import ValidationDiv from "../Components/ValidationDiv";
 
-const Edit = () => {
-  const [gymR, setGym] = useState(undefined);
+const Edit = ({ user, checkInProgress }) => {
+  const [gymR, setGymR] = useState(undefined);
   const { gymid } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     axios.get(`/gyms/${gymid}`).then((res) => {
-      setGym(res.data.gym);
+      setGymR(res.data.gym);
     });
   }, []);
 
+  useEffect(() => {
+    if (!checkInProgress && user && gymR && user?._id !== gymR?.author._id) {
+      console.log(user);
+      console.log(gymR);
+      navigate(`/gym/${gymid}`, {
+        state: {
+          bikini: {
+            type: "error",
+            message: "only author can edit the gym"
+          }
+        }
+      });
+    }
+  }, [user]);
+
   const onFormSubmit = async (values) => {
-    const gym = { gym: { ...values.gym } };
+    const payload = { gym: { ...values.gym } };
     await axios
-      .post(`/gyms/${gymid}/update`, gym)
+      .post(`/gyms/${gymid}/update`, payload)
       .then((res) => {
         if (res.status == 200) {
           navigate(`/gym/${gymid}`, {
