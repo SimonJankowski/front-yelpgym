@@ -50,6 +50,7 @@ const Show = ({ user }) => {
   };
 
   const onReviewSubmit = async (values) => {
+    console.log(values);
     const payload = { review: { ...values.review } };
     await axios
       .post(`http://localhost:3001/gyms/${gymid}/reviews`, payload)
@@ -83,16 +84,33 @@ const Show = ({ user }) => {
       <h2>Leave a review</h2>
       <Form
         onSubmit={onReviewSubmit}
-        render={({ handleSubmit, invalid }) => (
+        render={({ handleSubmit, invalid, form }) => (
           <form onSubmit={handleSubmit} className="mb-3">
-            <Field name="review[rating]" defaultValue={3}>
+            <Field name="review[rating]" className="mb-3" validate={Validators.required}>
               {({ input, meta }) => (
-                <div className="mb-3">
-                  <label className="form-label" htmlFor="rating">
-                    Rating
+                <fieldset class="starability-basic">
+                  <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" defaultChecked aria-label="No review." />
+                  <input {...input} type="radio" id="first-rate1" name="review[rating]" value="1" />
+                  <label htmlFor="first-rate1" title="Terrible">
+                    1 star
                   </label>
-                  <input {...input} name="rating" className="form-range" id="rating" type="range" min="1" max="5" />
-                </div>
+                  <input {...input} type="radio" id="first-rate2" name="review[rating]" value="2" />
+                  <label htmlFor="first-rate2" title="Not good">
+                    2 stars
+                  </label>
+                  <input {...input} type="radio" id="first-rate3" name="review[rating]" value="3" />
+                  <label htmlFor="first-rate3" title="Average">
+                    3 stars
+                  </label>
+                  <input {...input} type="radio" id="first-rate4" name="review[rating]" value="4" />
+                  <label htmlFor="first-rate4" title="Very good">
+                    4 stars
+                  </label>
+                  <input {...input} type="radio" id="first-rate5" name="review[rating]" value="5" />
+                  <label htmlFor="first-rate5" title="Amazing">
+                    5 stars
+                  </label>
+                </fieldset>
               )}
             </Field>
             <Field name="review[body]" validate={Validators.required}>
@@ -121,10 +139,12 @@ const Show = ({ user }) => {
       return (
         <div className="mb-3 card" key={review._id}>
           <div className="card-body">
-            <h5 className="card-title">Rating: {review.rating}</h5>
-            {review.author?.username ? <h6 className="card-subtitle mb-2 text-muted">by {review.author?.username} </h6> : null}
+            {review.author?.username ? <h6 className="card-title mb-2 text-muted">{review.author?.username} </h6> : null}
+            <p class="starability-result" data-rating={review.rating}>
+              Rated: {review.rating} stars
+            </p>
             <p className="card-text">Review: {review.body}</p>
-            {review.author?._id == user._id && user._id != undefined ? (
+            {review.author?._id == user?._id && user._id != undefined ? (
               <button onClick={() => onReviewDelete(review._id)} className="btn btn-sm btn-danger">
                 Delete
               </button>
