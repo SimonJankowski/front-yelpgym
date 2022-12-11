@@ -34,12 +34,12 @@ function App() {
         <Route index path="/" element={<LandingPage />} />
         <Route element={<Boilerplate user={currentUser} setUser={setCurrentUser} />}>
           <Route path="/gyms" element={<Gyms />} />
-          <Route path="/gym/:gymid" element={<Show />} />
+          <Route path="/gym/:gymid" element={<Show user={currentUser} />} />
           <Route
             path="/gym/:gymid/edit"
             element={
               <PRoute user={currentUser} checkInProgress={checkInProgress}>
-                <Edit />
+                <Edit user={currentUser} checkInProgress={checkInProgress} />
               </PRoute>
             }
           />
