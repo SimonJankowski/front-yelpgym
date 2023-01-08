@@ -5,6 +5,8 @@ import { Form, Field } from "react-final-form";
 import axios from "axios";
 import * as Validators from "../helpers/validators";
 import ValidationDiv from "../Components/ValidationDiv";
+const cloudName = process.env.REACT_APP_CLOUD_NAME;
+const uploadPreset = process.env.REACT_APP_UPLOAD_PRESET;
 
 const Edit = ({ user, checkInProgress }) => {
   const [gymR, setGymR] = useState(undefined);
@@ -19,8 +21,6 @@ const Edit = ({ user, checkInProgress }) => {
 
   useEffect(() => {
     if (!checkInProgress && user && gymR && user?._id !== gymR?.author._id) {
-      console.log(user);
-      console.log(gymR);
       navigate(`/gym/${gymid}`, {
         state: {
           bikini: {
@@ -32,8 +32,28 @@ const Edit = ({ user, checkInProgress }) => {
     }
   }, [user]);
 
+  const getTNUrl = (string) => {
+    return string.replace("/upload", "/upload/w_200");
+  };
+
   const onFormSubmit = async (values) => {
-    const payload = { gym: { ...values.gym } };
+    console.log(cloudName);
+    console.log(cloudName);
+    const formData = new FormData();
+    const images = [];
+    console.log(values);
+    for (let i = 0; i < values.files?.length; i++) {
+      let file = values.files[i];
+      formData.append("file", file);
+      formData.append("cloud_name", cloudName);
+      formData.append("upload_preset", uploadPreset);
+      await axios.post("https://api.cloudinary.com/v1_1/dj4wwgoki/auto/upload", formData, { withCredentials: false }).then((res) => {
+        console.log(res.data);
+        images.push({ url: res.data.url, filename: res.data.public_id });
+      });
+    }
+    console.log(images);
+    const payload = { gym: { ...values.gym, images: [...images] }, deletedImages: values.deletedImages || [] };
     await axios
       .post(`/gyms/${gymid}/update`, payload)
       .then((res) => {
@@ -55,6 +75,27 @@ const Edit = ({ user, checkInProgress }) => {
       });
   };
 
+  const FileField = ({ name, ...props }) => (
+    <Field name={name}>
+      {({ input: { value, onChange, ...input } }) => (
+        <div className="mb-3">
+          <label htmlFor="images" className="form-label">
+            Images
+          </label>
+          <input
+            {...input}
+            type="file"
+            onChange={({ target }) => onChange(target.files)} // instead of the default target.value
+            multiple
+            id="images"
+            {...props}
+            className="form-control"
+          />
+        </div>
+      )}
+    </Field>
+  );
+
   return (
     <>
       <div className="row">
@@ -64,7 +105,7 @@ const Edit = ({ user, checkInProgress }) => {
             onSubmit={onFormSubmit}
             initialValues={{ gym: { ...gymR, _id: undefined, reviews: undefined, __v: undefined } }}
             render={({ handleSubmit, invalid, pristine }) => (
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <Field name="gym[title]" validate={Validators.required}>
                   {({ input, meta }) => (
                     <div className="mb-3">
@@ -99,23 +140,7 @@ const Edit = ({ user, checkInProgress }) => {
                     </div>
                   )}
                 </Field>
-                <Field name="gym[image]" validate={Validators.required}>
-                  {({ input, meta }) => (
-                    <div className="mb-3">
-                      <label className="form-label" htmlFor="image">
-                        image
-                      </label>
-                      <input
-                        {...input}
-                        className={`form-control ${meta.touched ? (meta.error ? "is-invalid" : "is-valid") : ""}`}
-                        type="text"
-                        id="image"
-                        name="image"
-                      />
-                      <ValidationDiv meta={meta} />
-                    </div>
-                  )}
-                </Field>
+
                 <Field name="gym[price]" validate={Validators.required}>
                   {({ input, meta }) => (
                     <div className="mb-3">
@@ -156,6 +181,15 @@ const Edit = ({ user, checkInProgress }) => {
                     </div>
                   )}
                 </Field>
+                <FileField name="files" />
+
+                {gymR?.images?.map((img, idx) => (
+                  <>
+                    <img className="img-thumbnail" src={getTNUrl(img.url)} key={img.url} alt="gym" />
+                    <Field name="[deletedImages]" component="input" type="checkbox" value={img.filename} />
+                  </>
+                ))}
+
                 <div className="mb-3">
                   <button disabled={invalid || pristine} type="submit" className="btn btn-success">
                     Submit

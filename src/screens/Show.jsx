@@ -88,8 +88,8 @@ const Show = ({ user }) => {
           <form onSubmit={handleSubmit} className="mb-3">
             <Field name="review[rating]" className="mb-3" validate={Validators.required}>
               {({ input, meta }) => (
-                <fieldset class="starability-basic">
-                  <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" defaultChecked aria-label="No review." />
+                <fieldset className="starability-basic">
+                  <input type="radio" id="no-rate" className="input-no-rate" name="review[rating]" defaultChecked aria-label="No review." />
                   <input {...input} type="radio" id="first-rate1" name="review[rating]" value="1" />
                   <label htmlFor="first-rate1" title="Terrible">
                     1 star
@@ -140,7 +140,7 @@ const Show = ({ user }) => {
         <div className="mb-3 card" key={review._id}>
           <div className="card-body">
             {review.author?.username ? <h6 className="card-title mb-2 text-muted">{review.author?.username} </h6> : null}
-            <p class="starability-result" data-rating={review.rating}>
+            <p className="starability-result" data-rating={review.rating}>
               Rated: {review.rating} stars
             </p>
             <p className="card-text">Review: {review.body}</p>
@@ -173,8 +173,31 @@ const Show = ({ user }) => {
         <>
           <div className="row">
             <div className="col-6">
+              <div id="gymcarousel" className="carousel slide" data-bs-ride="carousel">
+                <div className="carousel-inner">
+                  {gym.images.map((img, idx) => (
+                    <div key={idx} className={"carousel-item" + (idx === 0 ? " active" : "")}>
+                      <img src={img.url} className="d-block w-100" alt="" />
+                    </div>
+                  ))}
+                </div>
+                {gym.images.length > 1 ? (
+                  <>
+                    <button className="carousel-control-prev" type="button" data-bs-target="#gymcarousel" data-bs-slide="prev">
+                      <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span className="visually-hidden">Previous</span>
+                    </button>
+                    <button className="carousel-control-next" type="button" data-bs-target="#gymcarousel" data-bs-slide="next">
+                      <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span className="visually-hidden">Next</span>
+                    </button>
+                  </>
+                ) : null}
+              </div>
+
               <div className="card mb-3">
-                <img src={gym.image} className="card-img-top" alt="..." />
+                {console.log(gym)}
+
                 <div className="card-body">
                   <h5 className="card-title">{gym.title}</h5>
                   <p className="card-text">{gym.description}</p>

@@ -7,6 +7,8 @@ import { bikini } from "../helpers/bikini";
 import axios from "axios";
 import * as Validators from "../helpers/validators";
 import ValidationDiv from "../Components/ValidationDiv";
+import { FileField } from "../Components/FileField";
+const cloudName = process.env.REACT_APP_CLOUD_NAME;
 
 const New = () => {
   const navigate = useNavigate();
@@ -19,7 +21,20 @@ const New = () => {
   }, []);
 
   const onFormSubmit = async (values) => {
-    const payload = { gym: { ...values.gym } };
+    const formData = new FormData();
+    const images = [];
+    for (let i = 0; i < values.files.length; i++) {
+      let file = values.files[i];
+      formData.append("file", file);
+      formData.append("cloud_name", cloudName);
+      formData.append("upload_preset", "nccdxvpu");
+      await axios.post("https://api.cloudinary.com/v1_1/dj4wwgoki/auto/upload", formData, { withCredentials: false }).then((res) => {
+        console.log(res.data);
+        images.push({ url: res.data.url, filename: res.data.public_id });
+      });
+    }
+    console.log(images);
+    const payload = { gym: { ...values.gym, images: images } };
     await axios
       .post("/gyms/new", payload)
       .then((res) => {
@@ -42,12 +57,33 @@ const New = () => {
       });
   };
 
+  const FileField = ({ name, ...props }) => (
+    <Field name={name}>
+      {({ input: { value, onChange, ...input } }) => (
+        <div className="mb-3">
+          <label htmlFor="images" className="form-label">
+            Images
+          </label>
+          <input
+            {...input}
+            type="file"
+            onChange={({ target }) => onChange(target.files)} // instead of the default target.value
+            multiple
+            id="images"
+            {...props}
+            className="form-control"
+          />
+        </div>
+      )}
+    </Field>
+  );
+
   const NewGymForm = () => {
     return (
       <Form
         onSubmit={onFormSubmit}
         render={({ handleSubmit, invalid }) => (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} encType="multipart/form-data">
             <Field name="gym[title]" validate={Validators.required}>
               {({ input, meta }) => (
                 <div className="mb-3">
@@ -82,23 +118,7 @@ const New = () => {
                 </div>
               )}
             </Field>
-            <Field name="gym[image]" validate={Validators.required}>
-              {({ input, meta }) => (
-                <div className="mb-3">
-                  <label className="form-label" htmlFor="image">
-                    image
-                  </label>
-                  <input
-                    {...input}
-                    className={`form-control ${meta.touched ? (meta.error ? "is-invalid" : "is-valid") : ""}`}
-                    type="text"
-                    id="image"
-                    name="image"
-                  />
-                  <ValidationDiv meta={meta} />
-                </div>
-              )}
-            </Field>
+            <FileField name="files" />
             <Field
               name="gym[price]"
               validate={Validators.composeValidators(Validators.required, Validators.mustBeNumber, Validators.minValue(0))}

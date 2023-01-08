@@ -41,7 +41,7 @@ const Gyms = () => {
             <div className="card mb-3" key={idx}>
               <div className="row">
                 <div className="col-md-4">
-                  <img src={gym.image} alt="" className="img-fluid" />
+                  <img src={gym.images[0].url} alt="" className="img-fluid" />
                 </div>
                 <div className="col-md-8">
                   <div className="card-body">
