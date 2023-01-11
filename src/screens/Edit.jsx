@@ -98,107 +98,111 @@ const Edit = ({ user, checkInProgress }) => {
 
   return (
     <>
-      <div className="row">
-        <h1 className="text-center">Edit gym</h1>
-        <div className="col-6 offset-3">
-          <Form
-            onSubmit={onFormSubmit}
-            initialValues={{ gym: { ...gymR, _id: undefined, reviews: undefined, __v: undefined } }}
-            render={({ handleSubmit, invalid, pristine }) => (
-              <form onSubmit={handleSubmit} encType="multipart/form-data">
-                <Field name="gym[title]" validate={Validators.required}>
-                  {({ input, meta }) => (
-                    <div className="mb-3">
-                      <label className="form-label" htmlFor="Name">
-                        Name
-                      </label>
-                      <input
-                        {...input}
-                        className={`form-control ${meta.touched ? (meta.error ? "is-invalid" : "is-valid") : ""}`}
-                        type="text"
-                        id="Name"
-                        name="Name"
-                      />
-                      <ValidationDiv meta={meta} />
-                    </div>
-                  )}
-                </Field>
-                <Field name="gym[location]" validate={Validators.required}>
-                  {({ input, meta }) => (
-                    <div className="mb-3">
-                      <label className="form-label" htmlFor="location">
-                        Location
-                      </label>
-                      <input
-                        {...input}
-                        className={`form-control ${meta.touched ? (meta.error ? "is-invalid" : "is-valid") : ""}`}
-                        type="text"
-                        id="location"
-                        name="location"
-                      />
-                      <ValidationDiv meta={meta} />
-                    </div>
-                  )}
-                </Field>
+      <div class="row">
+        <h1 class="text-center">New Gym</h1>
+        <div class="col-md-6 offset-md-3">
+          <div class="card shadow">
+            <div class="card-body">
+              <Form
+                onSubmit={onFormSubmit}
+                initialValues={{ gym: { ...gymR, _id: undefined, reviews: undefined, __v: undefined } }}
+                render={({ handleSubmit, invalid, pristine }) => (
+                  <form onSubmit={handleSubmit} encType="multipart/form-data">
+                    <Field name="gym[title]" validate={Validators.required}>
+                      {({ input, meta }) => (
+                        <div className="mb-3">
+                          <label className="form-label" htmlFor="Name">
+                            Name
+                          </label>
+                          <input
+                            {...input}
+                            className={`form-control ${meta.touched ? (meta.error ? "is-invalid" : "is-valid") : ""}`}
+                            type="text"
+                            id="Name"
+                            name="Name"
+                          />
+                          <ValidationDiv meta={meta} />
+                        </div>
+                      )}
+                    </Field>
+                    <Field name="gym[location]" validate={Validators.required}>
+                      {({ input, meta }) => (
+                        <div className="mb-3">
+                          <label className="form-label" htmlFor="location">
+                            Location
+                          </label>
+                          <input
+                            {...input}
+                            className={`form-control ${meta.touched ? (meta.error ? "is-invalid" : "is-valid") : ""}`}
+                            type="text"
+                            id="location"
+                            name="location"
+                          />
+                          <ValidationDiv meta={meta} />
+                        </div>
+                      )}
+                    </Field>
 
-                <Field name="gym[price]" validate={Validators.required}>
-                  {({ input, meta }) => (
-                    <div className="mb-3">
-                      <label className="form-label" htmlFor="price">
-                        Price
-                      </label>
-                      <div className="input-group">
-                        <span className="input-group-text" id="basic-addon1">
-                          $
-                        </span>
-                        <input
-                          {...input}
-                          className={`form-control ${meta.touched ? (meta.error ? "is-invalid" : "is-valid") : ""}`}
-                          type="number"
-                          id="price"
-                          name="price"
-                          placeholder="0"
-                        />
-                      </div>
-                      <ValidationDiv meta={meta} />
-                    </div>
-                  )}
-                </Field>
-                <Field name="gym[description]" validate={Validators.required}>
-                  {({ input, meta }) => (
-                    <div className="mb-3">
-                      <label className="form-label" htmlFor="description">
-                        Description
-                      </label>
-                      <textarea
-                        {...input}
-                        className={`form-control ${meta.touched ? (meta.error ? "is-invalid" : "is-valid") : ""}`}
-                        type="text"
-                        id="description"
-                        name="description"
-                      />
-                      <ValidationDiv meta={meta} />
-                    </div>
-                  )}
-                </Field>
-                <FileField name="files" />
+                    <Field name="gym[price]" validate={Validators.required}>
+                      {({ input, meta }) => (
+                        <div className="mb-3">
+                          <label className="form-label" htmlFor="price">
+                            Price
+                          </label>
+                          <div className="input-group">
+                            <span className="input-group-text" id="basic-addon1">
+                              $
+                            </span>
+                            <input
+                              {...input}
+                              className={`form-control ${meta.touched ? (meta.error ? "is-invalid" : "is-valid") : ""}`}
+                              type="number"
+                              id="price"
+                              name="price"
+                              placeholder="0"
+                            />
+                          </div>
+                          <ValidationDiv meta={meta} />
+                        </div>
+                      )}
+                    </Field>
+                    <Field name="gym[description]" validate={Validators.required}>
+                      {({ input, meta }) => (
+                        <div className="mb-3">
+                          <label className="form-label" htmlFor="description">
+                            Description
+                          </label>
+                          <textarea
+                            {...input}
+                            className={`form-control ${meta.touched ? (meta.error ? "is-invalid" : "is-valid") : ""}`}
+                            type="text"
+                            id="description"
+                            name="description"
+                          />
+                          <ValidationDiv meta={meta} />
+                        </div>
+                      )}
+                    </Field>
+                    <FileField name="files" />
 
-                {gymR?.images?.map((img, idx) => (
-                  <>
-                    <img className="img-thumbnail" src={getTNUrl(img.url)} key={img.url} alt="gym" />
-                    <Field name="[deletedImages]" component="input" type="checkbox" value={img.filename} />
-                  </>
-                ))}
+                    {gymR?.images?.map((img, idx) => (
+                      <>
+                        <img className="img-thumbnail" src={getTNUrl(img.url)} key={img.url} alt="gym" />
+                        <Field name="[deletedImages]" component="input" type="checkbox" value={img.filename} />
+                      </>
+                    ))}
 
-                <div className="mb-3">
-                  <button disabled={invalid || pristine} type="submit" className="btn btn-success">
-                    Submit
-                  </button>
-                </div>
-              </form>
-            )}
-          />
-          <a href={`/gym/${gymid}`}>back to Gym</a>
+                    <div className="mb-3">
+                      <button disabled={invalid || pristine} type="submit" className="btn btn-success">
+                        Submit
+                      </button>
+                    </div>
+                  </form>
+                )}
+              />
+              <a href={`/gym/${gymid}`}>back to Gym</a>
+            </div>
+          </div>
         </div>
       </div>
     </>

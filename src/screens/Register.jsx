@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import * as Validators from "../helpers/validators";
 import ValidationDiv from "../Components/ValidationDiv";
 import { bikini } from "../helpers/bikini";
+import loginPic from "../assets/loginPic.jpg";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -96,7 +97,7 @@ const Register = () => {
               )}
             </Field>
             <div className="mb-3">
-              <button disabled={invalid} type="submit" className="btn btn-success">
+              <button disabled={invalid} type="submit" className="btn btn-success w-100">
                 Register
               </button>
             </div>
@@ -119,10 +120,17 @@ const Register = () => {
         draggable
         pauseOnHover
       />
-      <div className="row">
-        <h1 className="text-center">Register</h1>
-        <div className="col-6 offset-3">
-          <RegisterForm />
+      <div class="container justify-content-center align-items-center mt-1">
+        <div class="row">
+          <div class="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
+            <div class="card shadow">
+              <img src={loginPic} alt="" class="card-img-top" />
+              <div class="card-body">
+                <h5 class="card-title">Register</h5>
+                <RegisterForm />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>

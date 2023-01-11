@@ -186,11 +186,15 @@ const New = () => {
         draggable
         pauseOnHover
       />
-      <div className="row">
-        <h1 className="text-center">Add gym</h1>
-        <div className="col-6 offset-3">
-          <NewGymForm />
-          <a href="/gyms">all gyms</a>
+      <div class="row">
+        <h1 class="text-center">New Gym</h1>
+        <div class="col-md-6 offset-md-3">
+          <div class="card shadow">
+            <div class="card-body">
+              <NewGymForm />
+              <a href="/gyms">all gyms</a>
+            </div>
+          </div>
         </div>
       </div>
     </>
