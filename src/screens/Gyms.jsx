@@ -31,11 +31,9 @@ const Gyms = () => {
         draggable
         pauseOnHover
       />
-      <h1> All Gyms</h1>
-      <div>
-        <a href="/new">add gym</a>
-      </div>
+
       <ul>
+        <h1> All Gyms</h1>
         {gyms?.length ? (
           gyms.map((gym, idx) => (
             <div className="card mb-3" key={idx}>

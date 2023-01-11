@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route, Switch, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import LandingPage from "./screens/LandingPage";
 import Gyms from "./screens/Gyms";
@@ -31,7 +31,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index path="/" element={<LandingPage />} />
+        <Route index path="/" element={<LandingPage setUser={setCurrentUser} user={currentUser} />} />
         <Route element={<Boilerplate user={currentUser} setUser={setCurrentUser} />}>
           <Route path="/gyms" element={<Gyms />} />
           <Route path="/gym/:gymid" element={<Show user={currentUser} />} />
