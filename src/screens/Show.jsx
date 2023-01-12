@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Form, Field } from "react-final-form";
@@ -6,9 +6,13 @@ import { ToastContainer } from "react-toastify";
 import axios from "axios";
 import * as Validators from "../helpers/validators";
 import { bikini } from "../helpers/bikini";
+import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
+mapboxgl.accessToken = "pk.eyJ1Ijoic2ltb25qYXkiLCJhIjoiY2t1czZvMGJjMWpoNjJwcXJtNDJqZmp1biJ9.9MMga3s7vQYPW9v67AEATg";
 
 const Show = ({ user }) => {
   const [gym, setGym] = useState(undefined);
+  const mapContainer = useRef(null);
+  const map = useRef(null);
   const { gymid } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,6 +24,21 @@ const Show = ({ user }) => {
       bikini(type, message);
     }
   }, []);
+
+  useEffect(() => {
+    if (map.current || gym == undefined) return; // initialize map only once
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: "mapbox://styles/mapbox/streets-v12",
+      center: [gym.geometry?.coordinates?.[0] ?? 0, gym.geometry?.coordinates?.[1] ?? 0],
+      zoom: 9
+    });
+    new mapboxgl.Marker()
+      .setLngLat([gym.geometry?.coordinates?.[0] ?? 0, gym.geometry?.coordinates?.[1] ?? 0])
+      .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<h3>${gym.title}</h3><p>${gym.location}</p>`))
+      .addTo(map.current);
+    map.current.addControl(new mapboxgl.NavigationControl());
+  }, [gym]);
 
   function getGym() {
     axios.get(`http://localhost:3001/gyms/${gymid}`).then((res) => {
@@ -221,6 +240,9 @@ const Show = ({ user }) => {
               </div>
             </div>
             <div className="col-6">
+              <div>
+                <div ref={mapContainer} className="map-container" />
+              </div>
               {user ? <ReviewForm /> : null}
               {gym?.reviews?.length ? <ReviewList /> : null}
             </div>
