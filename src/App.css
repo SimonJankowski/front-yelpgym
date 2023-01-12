@@ -1,4 +1,6 @@
-
+.map-container {
+  height: 400px;
+  }
 
 @keyframes App-logo-spin {
   from {
